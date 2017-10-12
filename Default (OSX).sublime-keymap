@@ -1,5 +1,8 @@
 [
   {
     "keys": ["command+shift+o"], "command": "git_open_changed_files"
+  },
+  {
+    "keys": ["command+ctrl+shift+o"], "command": "git_open_conflict_files"
   }
 ]

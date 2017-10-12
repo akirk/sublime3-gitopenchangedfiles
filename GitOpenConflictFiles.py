@@ -1,11 +1,7 @@
 import sublime, sublime_plugin
 import subprocess, os, re
 
-def load_settings():
-  global settings
-  settings = sublime.load_settings('GitOpenChangedFiles.sublime-settings')
-#x
-class GitOpenChangedFiles(sublime_plugin.TextCommand):
+class GitOpenConflictFiles(sublime_plugin.TextCommand):
   def print_with_status(self, message):
     sublime.status_message(message)
     print(message)
@@ -43,9 +39,7 @@ class GitOpenChangedFiles(sublime_plugin.TextCommand):
       self.print_with_error("git not found in PATH")
       return
 
-    compare_branch_to = settings.get('compare_branch_to', 'master...')
-
-    pr = subprocess.Popen("git diff --name-only "+compare_branch_to , cwd = current_folder, shell = True, stdout = subprocess.PIPE, stderr = subprocess.PIPE )
+    pr = subprocess.Popen("git status --porcelain | grep ^UU" , cwd = current_folder, shell = True, stdout = subprocess.PIPE, stderr = subprocess.PIPE )
     (filenames, error) = pr.communicate()
 
     if error:
@@ -53,14 +47,12 @@ class GitOpenChangedFiles(sublime_plugin.TextCommand):
       return
     else:
       filenames_split = bytes.decode(filenames).splitlines()
-      filename_pattern = re.compile("([^" + self.system_folder_seperator() + "]+$)")
+      filename_pattern = re.compile("^UU ([^" + self.system_folder_seperator() + "]+$)")
       sorted_filenames = sorted(filenames_split, key=lambda fn: filename_pattern.findall(fn))
 
       for file_modified in sorted_filenames:
-        filename = current_folder + self.system_folder_seperator() + file_modified
+        filename = current_folder + self.system_folder_seperator() + file_modified[3:]
         if os.path.isfile(filename):
           sublime.active_window().open_file(filename)
 
-      self.print_with_status("Git: Opened files modified in branch")
-
-load_settings()
+      self.print_with_status("Git: Opened conflict files")

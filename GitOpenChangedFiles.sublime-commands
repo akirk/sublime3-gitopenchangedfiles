@@ -2,5 +2,9 @@
     {
         "caption": "Git: Open files different from master",
         "command": "git_open_changed_files"
+    },
+    {
+        "caption": "Git: Open conflict files",
+        "command": "git_open_conflict_files"
     }
 ]

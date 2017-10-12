@@ -6,14 +6,18 @@
     "children":
     [
       {
-        "caption": "Git - Open files different from master",
-        "mnemonic": "f",
+        "caption": "Git",
+        "mnemonic": "G",
         "id": "git_open_changed_files",
         "children":
         [
           {
             "command": "git_open_changed_files",
             "caption": "Open files different from master"
+          },
+          {
+            "command": "git_open_conflict_files",
+            "caption": "Open conflict files"
           }
         ]
       }
